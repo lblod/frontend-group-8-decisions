@@ -1,3 +1,14 @@
+peloton-planner:
+  modal:
+    title: Selecteer aanvraag
+    close: Sluiten
+    insert: Invoegen
+  table:
+    header:
+      name: Aanvragen
+  search:
+    placeholder: Zoeken
+
 agendapoint:
   editor-tabs: editor-tabs
   revisions: Versies

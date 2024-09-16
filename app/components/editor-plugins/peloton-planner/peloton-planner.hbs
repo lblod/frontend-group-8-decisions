@@ -1,1 +1,6 @@
-<div>TEST</div>
+<AuButton {{on "click" this.openModal}}>Voeg planning toe</AuButton>
+<EditorPlugins::PelotonPlanner::Modal
+
+  @open={{this.modalOpen}}
+  @closeModal={{this.closeModal}}
+/>

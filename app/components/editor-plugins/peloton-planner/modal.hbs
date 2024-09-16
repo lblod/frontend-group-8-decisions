@@ -1,0 +1,37 @@
+<AuModal
+  @modalOpen={{@open}}
+  @closeModal={{this.closeModal}}
+  @title={{t 'peloton-planner.modal.title'}}
+  @size='large'
+  @padding='none'
+  as |modal|
+>
+  <modal.Body>
+    <AuMainContainer class='snippet-modal--main-container' as |mc|>
+      <mc.content @scroll={{true}}>
+        <div class='snippet-modal--list-container'>
+          {{#if this.error}}
+            <Common::Search::AlertLoadError
+              @error={{this.error}}
+              class='au-u-margin-top-none'
+            />
+          {{else}}
+            <EditorPlugins::PelotonPlanner::Table />
+          {{/if}}
+        </div>
+        <AuToolbar
+          @border='top'
+          @size='large'
+          @nowrap={{true}}
+          @reverse={{true}}
+        >
+          <AuButtonGroup>
+            <AuButton @skin='secondary' {{on 'click' this.closeModal}}>
+              {{t 'peloton-planner.modal.close'}}
+            </AuButton>
+          </AuButtonGroup>
+        </AuToolbar>
+      </mc.content>
+    </AuMainContainer>
+  </modal.Body>
+</AuModal>
