@@ -94,8 +94,10 @@ module.exports = function (environment) {
       'http://lblod.data.gift/concept-schemes/62331E6900730AE7B99DF7EF';
     ENV.nonZonalLocationCodelistUri =
       'http://lblod.data.gift/concept-schemes/62331FDD00730AE7B99DF7F2';
-    ENV.regulatoryStatementEndpoint = 'http://localhost:4502/raw-sparql';
-    ENV.regulatoryStatementFileEndpoint = 'http://localhost:4502/files';
+    ENV.regulatoryStatementEndpoint =
+      'http://template.hackathon-8.s.redhost.be/raw-sparql';
+    ENV.regulatoryStatementFileEndpoint =
+      'http://template.hackathon-8.s.redhost.be/files';
     ENV.lmbEndpoint = 'https://dev.mandatenbeheer.lblod.info';
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
