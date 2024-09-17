@@ -8,6 +8,12 @@ peloton-planner:
       name: Aanvragen
   search:
     placeholder: Zoeken
+data-filler:
+  card:
+    title: Aanvullen uit databron
+    button: Open bron
+    peloton: PelotonPlanner
+
 
 agendapoint:
   editor-tabs: editor-tabs

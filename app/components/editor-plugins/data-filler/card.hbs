@@ -1,0 +1,32 @@
+<AuCard
+  @flex={{true}}
+  @divided={{true}}
+  @isOpenInitially={{true}}
+  @expandable={{true}}
+  @shadow={{true}}
+  @size='small'
+  as |Card|
+>
+
+  <Card.header>
+    <AuHeading @level='3' @skin='6'>{{t 'data-filler.card.title'}}</AuHeading>
+  </Card.header>
+  <Card.content>
+    <AuFormRow @alignment='inline'>
+      <AuLabel for='open-data-source'>{{t 'data-filler.card.peloton'}}</AuLabel>
+      <AuButton
+        id='open-data-source'
+        @skin='secondary'
+        @icon='pencil'
+        {{on 'click' this.openModal}}
+      >
+        {{t 'data-filler.card.button'}}
+      </AuButton>
+    </AuFormRow>
+  </Card.content>
+
+</AuCard>
+<EditorPlugins::DataFiller::Modal
+  @modalOpen={{this.modalOpen}}
+  @onClose={{this.closeModal}}
+/>

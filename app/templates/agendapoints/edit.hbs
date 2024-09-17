@@ -46,6 +46,7 @@
       {{on 'click' (perform this.saveTask)}}
       @disabled={{this.save.isRunning}}
     >{{t 'utils.save'}}</AuButton>
+
   </:actions>
 </AppChrome>
 
@@ -165,6 +166,8 @@
       />
     </:sidebarCollapsible>
     <:sidebar>
+
+      <EditorPlugins::DataFiller::Card @controller={{this.controller}} />
       <this.StructureControlCard @controller={{this.controller}} />
       <DecisionPlugin::DecisionPluginCard @controller={{this.controller}} />
       <CitationPlugin::CitationCard
