@@ -66,8 +66,7 @@ export default class EditorPluginsDataFillerCardComponent extends Component {
   get controller() {
     return this.args.controller;
   }
-  openModal = () => {
-    // this.modalOpen = true;
+  replaceNodes = () => {
     /** @type {{node: PNode, pos: number}[]} */
     const nodesWithPos = [];
     this.controller.mainEditorState.doc.descendants((node, pos) => {
@@ -100,7 +99,14 @@ export default class EditorPluginsDataFillerCardComponent extends Component {
       return tr;
     });
   };
+  openModal = () => {
+    this.modalOpen = true;
+  };
   closeModal = () => {
     this.modalOpen = false;
+  };
+  fillRaceRequest = (raceRequest) => {
+    console.log('Selected request', raceRequest);
+    this.closeModal();
   };
 }

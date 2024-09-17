@@ -26,7 +26,8 @@
   </Card.content>
 
 </AuCard>
-<EditorPlugins::DataFiller::Modal
-  @modalOpen={{this.modalOpen}}
-  @onClose={{this.closeModal}}
+<EditorPlugins::PelotonPlanner::Modal
+  @open={{this.modalOpen}}
+  @closeModal={{this.closeModal}}
+  @onSelect={{this.fillRaceRequest}}
 />

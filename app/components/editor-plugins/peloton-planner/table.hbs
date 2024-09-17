@@ -8,7 +8,7 @@
   }}
     <AuDataTable
       @content={{this.dataTableContent}}
-      @isLoading={{@isLoading}}
+      @isLoading={{this.isLoading}}
       @noDataMessage={{t 'common.search.no-results'}}
       @sort={{@sort}}
       @page={{@pageNumber}}
@@ -42,7 +42,7 @@
         <c.body as |row|>
           <td>{{row.name}}</td>
           <td class='snippet-list-table-select-column'>
-            <AuButton {{on 'click' (fn @onLpdcInsert row)}}>
+            <AuButton {{on 'click' (fn @onSelectRow row)}}>
               {{insert}}
             </AuButton>
           </td>

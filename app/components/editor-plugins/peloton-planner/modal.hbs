@@ -16,7 +16,7 @@
               class='au-u-margin-top-none'
             />
           {{else}}
-            <EditorPlugins::PelotonPlanner::Table />
+            <EditorPlugins::PelotonPlanner::Table @onSelectRow={{@onSelect}}/>
           {{/if}}
         </div>
         <AuToolbar
