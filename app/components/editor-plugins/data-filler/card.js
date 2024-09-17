@@ -38,14 +38,14 @@ const REPLACER_SPECS = [
   {
     type: 'text_variable',
     label: 'organisator',
-    replacer: (tr, schema, node, pos) => {
+    replacer: (tr, schema, node, pos, raceRequest) => {
       tr.replaceRangeWith(
         pos,
         pos + node.nodeSize,
         node.replace(
           0,
-          1,
-          new Slice(Fragment.fromArray([schema.text('test-org')]), 0, 0),
+          node.nodeSize - 2,
+          new Slice(Fragment.fromArray([schema.text(raceRequest.org)]), 0, 0),
         ),
       );
       return tr;
@@ -54,18 +54,14 @@ const REPLACER_SPECS = [
   {
     type: 'text_variable',
     label: 'evenementnaam',
-    replacer: (tr, schema, node, pos) => {
+    replacer: (tr, schema, node, pos, raceRequest) => {
       tr.replaceRangeWith(
         pos,
         pos + node.nodeSize,
         node.replace(
           0,
-          1,
-          new Slice(
-            Fragment.fromArray([schema.text('Luik-Bastenaken-Luik')]),
-            0,
-            0,
-          ),
+          node.nodeSize - 2,
+          new Slice(Fragment.fromArray([schema.text(raceRequest.name)]), 0, 0),
         ),
       );
       return tr;
@@ -74,7 +70,7 @@ const REPLACER_SPECS = [
   {
     type: 'date',
     label: 'indiendatum',
-    replacer: (tr, _schema, node, pos) => {
+    replacer: (tr, _schema, node, pos, raceRequest) => {
       console.log('setting date', new Date().toISOString());
       tr.setNodeAttribute(
         pos,
@@ -82,7 +78,25 @@ const REPLACER_SPECS = [
         changeRdfaProp(
           node.attrs.properties,
           EXT('content'),
-          new Date().toISOString(),
+          raceRequest.submissionDate,
+          XSD('date').namedNode,
+        ),
+      );
+      return tr;
+    },
+  },
+  {
+    type: 'date',
+    label: 'starttijd',
+    replacer: (tr, _schema, node, pos, raceRequest) => {
+      console.log('setting date', new Date().toISOString());
+      tr.setNodeAttribute(
+        pos,
+        'properties',
+        changeRdfaProp(
+          node.attrs.properties,
+          EXT('content'),
+          raceRequest.startDate,
           XSD('date').namedNode,
         ),
       );
@@ -142,7 +156,7 @@ export default class EditorPluginsDataFillerCardComponent extends Component {
   get controller() {
     return this.args.controller;
   }
-  replaceNodes = () => {
+  replaceNodes = (raceRequest) => {
     /** @type {{node: PNode, pos: number}[]} */
     const nodesWithPos = [];
     this.controller.mainEditorState.doc.descendants((node, pos) => {
@@ -164,7 +178,7 @@ export default class EditorPluginsDataFillerCardComponent extends Component {
             getOutgoingTriple(node.attrs, EXT('label'))?.object.value ===
               spec.label
           ) {
-            spec.replacer(tr, this.controller.schema, node, pos);
+            spec.replacer(tr, this.controller.schema, node, pos, raceRequest);
           }
         }
       }
@@ -179,7 +193,7 @@ export default class EditorPluginsDataFillerCardComponent extends Component {
   };
   fillRaceRequest = (raceRequest) => {
     console.log('Selected request', raceRequest);
-    this.replaceNodes();
+    this.replaceNodes(raceRequest);
     this.closeModal();
   };
 }
