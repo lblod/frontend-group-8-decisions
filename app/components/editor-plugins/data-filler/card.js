@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { Fragment, Slice } from '@lblod/ember-rdfa-editor';
 import {
+  DCT,
   EXT,
   XSD,
 } from '@lblod/ember-rdfa-editor-lblod-plugins/utils/constants';
@@ -125,6 +126,17 @@ const REPLACER_SPECS = [
     },
 
     replacer: (tr, _schema, node, pos, raceRequest) => {
+      tr.setNodeAttribute(pos, 'value', raceRequest.startLocation);
+      tr.setNodeAttribute(
+        pos,
+        'properties',
+        changeRdfaProp(
+          node.attrs.properties,
+          DCT('type'),
+          'place',
+          XSD('string').namedNode,
+        ),
+      );
       console.log('replacing node', node);
       return tr;
     },
