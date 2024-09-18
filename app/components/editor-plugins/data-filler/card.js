@@ -20,6 +20,10 @@ import {
 /** @typedef {import('@lblod/ember-rdfa-editor').NamedNode} NamedNode */
 /** @typedef {import('@lblod/ember-rdfa-editor/core/rdfa-processor').OutgoingTriple} OutgoingTriple */
 
+// TODO: [hack] rather than hardcoding, the nodes themselves would carry an
+// flag to opt in to the data-filler feature
+// In the end this is simply a performance tweak, so that we don't have to
+// analyse every single node.
 const VARIABLE_NODE_TYPES = [
   'text_variable',
   'number',
@@ -29,11 +33,15 @@ const VARIABLE_NODE_TYPES = [
 /**
  * @typedef {Object} ReplacerSpec
  * @property {string} type
- * @property {string} label
+ * @property {string?} label
+ * @property {((node: PNode) => boolean)?} filter
  * @property {(tr: Transaction, schema: Schema, node: PNode, pos: number) => Transaction} replacer
  */
 
-/** @type{ReplacerSpec[]} */
+/**
+ * TODO: [hack] clearly this would need some supporting utils for easy
+ * configuration and to avoid duplicated code
+ * @type{ReplacerSpec[]} */
 const REPLACER_SPECS = [
   {
     type: 'text_variable',
@@ -100,6 +108,24 @@ const REPLACER_SPECS = [
           XSD('date').namedNode,
         ),
       );
+      return tr;
+    },
+  },
+  {
+    type: 'oslo_location',
+    filter(node) {
+      // TODO: [hack] the matching is a bit brittle (doesn't support prefixed
+      // string, for example) but this demonstrates that we can use rdfa
+      // knowledge to drive the filler logic, not just arbitrary labels
+      return !!node.attrs.backlinks?.find(
+        (backlink) =>
+          backlink.predicate ===
+          'http://dbpedia.org/ontology/routeStartLocation',
+      );
+    },
+
+    replacer: (tr, _schema, node, pos, raceRequest) => {
+      console.log('replacing node', node);
       return tr;
     },
   },
@@ -173,12 +199,15 @@ export default class EditorPluginsDataFillerCardComponent extends Component {
     this.controller.withTransaction((tr) => {
       for (const { node, pos } of nodesWithPos) {
         for (const spec of REPLACER_SPECS) {
-          if (
-            node.type.name === spec.type &&
-            getOutgoingTriple(node.attrs, EXT('label'))?.object.value ===
-              spec.label
-          ) {
-            spec.replacer(tr, this.controller.schema, node, pos, raceRequest);
+          if (node.type.name === spec.type) {
+            const filterWasTrue = spec.filter?.(node);
+            const labelMatch =
+              spec.label &&
+              getOutgoingTriple(node.attrs, EXT('label'))?.object.value ===
+                spec.label;
+            if (filterWasTrue || labelMatch) {
+              spec.replacer(tr, this.controller.schema, node, pos, raceRequest);
+            }
           }
         }
       }
