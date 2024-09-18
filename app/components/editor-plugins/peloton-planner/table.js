@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { task, timeout } from 'ember-concurrency';
 import { trackedTask } from 'ember-resources/util/ember-concurrency';
+import { executeQuery } from '@lblod/ember-rdfa-editor-lblod-plugins/utils/sparql-helpers';
 /**
  * @typedef {Object} Args
  * @property {boolean} isLoading
@@ -12,7 +13,18 @@ import { trackedTask } from 'ember-resources/util/ember-concurrency';
 export default class PelotonPlannerTableComponent extends Component {
   contentTask = task(async () => {
     await timeout(1000);
-    //TODO SPARQL query HERE
+    // TODO: [hack] endpoint should obviously be configurable here
+    const result = await executeQuery({
+      query: `
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT * WHERE {
+  <http://data.lblod.info/id/application-forms/66EA9681453552245DF73E08> ?p ?v.
+} LIMIT 1000
+`,
+      endpoint: 'https://pelotonplanner.hackathon-8.s.redhost.be/raw-sparql',
+    });
+    console.log(result);
 
     return [
       {
